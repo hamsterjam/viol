@@ -1,0 +1,19 @@
+[
+   {
+      "name": "vertShader",
+      "src" : "res/pt.vert",
+      "type": "text"
+   }, {
+      "name": "fragShader",
+      "src" : "res/pt.frag",
+      "type": "text"
+   }, {
+      "name": "config",
+      "src" : "config.json",
+      "type": "json"
+   }, {
+      "name": "testSprite",
+      "src" : "res/test.png",
+      "type": "image"
+   }
+]
