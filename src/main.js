@@ -1,4 +1,6 @@
 //#INCLUDE "src/loader.js"
+//#INCLUDE "src/Mat3.js"
+//#INCLUDE "src/Texture.js"
 
 if (!VIOL) var VIOL = {};
 if (!gl) var gl = {};
@@ -43,14 +45,28 @@ document.addEventListener('DOMContentLoaded', function() {
          console.error("Failed to link shader");
       }
 
+      gl.useProgram(shader);
+
       // Bind shader variables
       shader.attrib = {};
+      shader.uniform = {};
 
       shader.attrib.vertPos = gl.getAttribLocation(shader, "aVertPos");
       gl.enableVertexAttribArray(shader.attrib.vertPos);
 
+      shader.attrib.textureCoord = gl.getAttribLocation(shader, "aTextureCoord");
+      gl.enableVertexAttribArray(shader.attrib.textureCoord);
+
+      shader.uniform.texture = gl.getUniformLocation(shader, "uTexture");
+      shader.uniform.modelMatrix = gl.getUniformLocation(shader, "uModelMatrix");
+      shader.uniform.viewMatrix = gl.getUniformLocation(shader, "uViewMatrix");
+
+      // Set the view matrix (this is a temporary fixed camera)
+      var viewMat = VIOL.Mat3.scale(2/canvas.width, 2/canvas.height);
+      viewMat = VIOL.Mat3.translate(-1, -1).mul(viewMat);
+      gl.uniformMatrix3fv(shader.uniform.viewMatrix, false, viewMat.transpose().data);
+
       // Set up our display
-      gl.useProgram(shader);
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
 
@@ -62,31 +78,22 @@ document.addEventListener('DOMContentLoaded', function() {
    });
 });
 
-function drawSprite(img, x, y) {
-   // First we need to make an array of the corners
-   var w = 2*img.width/VIOL.canvas.width;
-   var h = 2*img.height/VIOL.canvas.height;
+function drawSprite(tex, x, y) {
+   // Generate model matrix
+   var modelMat = VIOL.Mat3.translate(x, y);
+   gl.uniformMatrix3fv(VIOL.shader.uniform.modelMatrix, false, modelMat.transpose().data);
 
-   var verts = [
-      x,   y,   0,
-      x+w, y,   0,
-      x,   y+h, 0,
-      x+w, y+h, 0
-   ];
+   // Ask the texture politely to bind the attributes
+   tex.bindAttribs(VIOL.shader.attrib.vertPos, VIOL.shader.attrib.textureCoord);
 
-   // Make a buffer
-   vertBuffer = gl.createBuffer();
-   gl.bindBuffer(gl.ARRAY_BUFFER, vertBuffer);
-
-   // Buffer the data
-   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
-
-   // Bind it to the attribute
-   gl.vertexAttribPointer(VIOL.shader.attrib.vertPos, 3, gl.FLOAT, false, 0, 0);
+   // Bind the texture itself
+   gl.activeTexture(gl.TEXTURE0);
+   gl.bindTexture(gl.TEXTURE_2D, tex.tex);
+   gl.uniform1i(VIOL.shader.uniform.texture, 0);
 
    // Draw
    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-   //Unbind the buffer
-   gl.bindBuffer(gl.ARRAY_BUFFER, null);
+   // Cleanup
+   gl.bindTexture(gl.TEXTURE_2D, null);
 }
