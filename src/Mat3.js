@@ -83,9 +83,9 @@ if (!VIOL) var VIOL = {};
       var cosT = Math.cos(t);
 
       return new Mat3([
-             cosT, sinT, 0,
-            -sinT, cosT, 0,
-                0,    0, 1
+            cosT, -sinT, 0,
+            sinT,  cosT, 0,
+               0,     0, 1
       ]);
    };
 
