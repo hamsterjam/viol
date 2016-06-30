@@ -2,6 +2,7 @@
 //#INCLUDE "src/Mat3.js"
 //#INCLUDE "src/Shader.js"
 //#INCLUDE "src/Texture.js"
+//#INCLUDE "src/Material.js"
 
 if (!VIOL) var VIOL = {};
 if (!gl) var gl = {};
@@ -23,6 +24,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Make the shader
       var shader = new VIOL.Shader(VIOL.res.vertSrc, VIOL.res.fragSrc, 2);
+      shader.bindMaterial = function(mat) {
+         // The material should have one texture called "tex"
+         var tex = mat.getTexture("tex");
+
+         // Bind the attribs
+         gl.bindBuffer(gl.ARRAY_BUFFER, tex.vertBuffer);
+         gl.vertexAttribPointer(this.attrib("aVertPos"), 2, gl.FLOAT, false, 0, 0);
+
+         gl.bindBuffer(gl.ARRAY_BUFFER, tex.coordBuffer);
+         gl.vertexAttribPointer(this.attrib("aTexCoord"), 2, gl.FLOAT, false, 0, 0);
+
+         // Bind the texture
+         gl.activeTexture(gl.TEXTURE0);
+         gl.bindTexture(gl.TEXTURE_2D, tex.tex);
+         gl.uniform1i(this.uniform("uTexture"), 0);
+
+         // Cleanup
+         gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      };
+      shader.draw = function() {
+         // Draw
+         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      };
       shader.enable();
 
       // Set the view matrix (this is a temporary fixed camera)
@@ -42,23 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
    });
 });
 
-function drawSprite(tex, x, y) {
+function drawSprite(mat, x, y) {
    // Generate model matrix
    var modelMat = VIOL.Mat3.translate(x, y);
    modelMat = modelMat.aMul(VIOL.Mat3.rotate(Math.PI/4));
    gl.uniformMatrix3fv(VIOL.shader.uniform("uModelMatrix"), false, modelMat.transpose().data);
 
-   // Ask the texture politely to bind the attributes
-   tex.bindAttribs(VIOL.shader.attrib("aVertPos"), VIOL.shader.attrib("aTextureCoord"));
-
-   // Bind the texture itself
-   gl.activeTexture(gl.TEXTURE0);
-   gl.bindTexture(gl.TEXTURE_2D, tex.tex);
-   gl.uniform1i(VIOL.shader.uniform("uTexture"), 0);
-
-   // Draw
-   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-   // Cleanup
-   gl.bindTexture(gl.TEXTURE_2D, null);
+   VIOL.shader.bindMaterial(mat);
+   VIOL.shader.draw();
 }
