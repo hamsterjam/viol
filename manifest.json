@@ -1,10 +1,10 @@
 [
    {
-      "name": "vertShader",
+      "name": "vertSrc",
       "src" : "res/pt.vert",
       "type": "text"
    }, {
-      "name": "fragShader",
+      "name": "fragSrc",
       "src" : "res/pt.frag",
       "type": "text"
    }, {

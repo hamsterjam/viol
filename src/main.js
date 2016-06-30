@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
       gl = canvas.getContext("webgl");
 
       // Make the shader
-      var shader = new VIOL.Shader(VIOL.res.vertShader, VIOL.res.fragShader, 2);
+      var shader = new VIOL.Shader(VIOL.res.vertSrc, VIOL.res.fragSrc, 2);
       shader.enable();
 
       // Set the view matrix (this is a temporary fixed camera)
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function drawSprite(tex, x, y) {
    // Generate model matrix
    var modelMat = VIOL.Mat3.translate(x, y);
+   modelMat = modelMat.aMul(VIOL.Mat3.rotate(Math.PI/4));
    gl.uniformMatrix3fv(VIOL.shader.uniform("uModelMatrix"), false, modelMat.transpose().data);
 
    // Ask the texture politely to bind the attributes
