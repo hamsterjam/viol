@@ -13,11 +13,11 @@ if (!VIOL) var VIOL = {};
 
    Material.prototype = {
       get w() {
-         return textures[0].w;
+         return this.textures[0].w;
       },
 
       get h() {
-         return texture[1].h;
+         return this.textures[0].h;
       }
    };
 

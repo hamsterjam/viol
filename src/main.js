@@ -3,6 +3,7 @@
 //#INCLUDE "src/Shader.js"
 //#INCLUDE "src/Texture.js"
 //#INCLUDE "src/Material.js"
+//#INCLUDE "src/Sprite.js"
 
 if (!VIOL) var VIOL = {};
 if (!gl) var gl = {};
@@ -66,12 +67,25 @@ document.addEventListener('DOMContentLoaded', function() {
    });
 });
 
-function drawSprite(mat, x, y) {
-   // Generate model matrix
-   var modelMat = VIOL.Mat3.translate(x, y);
-   modelMat = modelMat.aMul(VIOL.Mat3.rotate(Math.PI/4));
-   gl.uniformMatrix3fv(VIOL.shader.uniform("uModelMatrix"), false, modelMat.transpose().data);
+function drawImage(img, x, y) {
+   // Clear
+   gl.clear(gl.COLOR_BUFFER_BIT);
 
+   // Make a texture
+   var tex = new VIOL.Texture(img);
+
+   // Make a material
+   var mat = new VIOL.Material(tex);
+
+   // Make a sprite
+   var sprite = new VIOL.Sprite(mat, [x, y], [0.5, 0.5]);
+
+   // Bind the model array (this will be handled by the shader later)
+   gl.uniformMatrix3fv(VIOL.shader.uniform("uModelMatrix"), false, sprite.transMatrix.transpose().data);
+
+   // Tell shader to use the material (again, handled by shader in the future)
    VIOL.shader.bindMaterial(mat);
+
+   // Draw
    VIOL.shader.draw();
 }
