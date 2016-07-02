@@ -79,6 +79,17 @@ if (!VIOL) var VIOL = {};
    };
 
    Mat3.rotate = function(t) {
+      var sinT = Math.sin(t*Math.PI/180);
+      var cosT = Math.cos(t*Math.PI/180);
+
+      return new Mat3([
+            cosT, -sinT, 0,
+            sinT,  cosT, 0,
+               0,     0, 1
+      ]);
+   };
+
+   Mat3.rotateRad = function(t) {
       var sinT = Math.sin(t);
       var cosT = Math.cos(t);
 
