@@ -2,7 +2,6 @@
 //#DEFINE __HAMSTERJAM_VIOL_TEXTURE
 
 if (!VIOL) VIOL = {};
-if (!gl) gl ={};
 
 (function() {
    function Texture(img) {
