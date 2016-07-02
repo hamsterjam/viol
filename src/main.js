@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var shader = new VIOL.Shader(VIOL.res.vertSrc, VIOL.res.fragSrc, 2);
       shader.bindMaterial = function(mat) {
          // The material should have one texture called "tex"
-         var tex = mat.getTexture("tex");
+         var tex = mat.textures[0];
 
          // Bind the attribs
          gl.bindBuffer(gl.ARRAY_BUFFER, tex.vertBuffer);

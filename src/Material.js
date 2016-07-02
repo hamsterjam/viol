@@ -4,19 +4,21 @@
 if (!VIOL) var VIOL = {};
 
 (function() {
-   // This really is just equivalent to an empty object, the only reason
+   // This really is just equivalent to an array, the only reason
    // it exists at the moment is if I want to expand it later (probably
    // to track any Sprite that uses it)
-   function Material() {
-      this.textures = {};
+   function Material(... textures) {
+      this.textures = textures;
    }
 
-   Material.prototype.bindTexture = function(texture, name) {
-      this.textures[name] = texture;
-   };
+   Material.prototype = {
+      get w() {
+         return textures[0].w;
+      },
 
-   Material.prototype.getTexture = function(name) {
-      return this.textures[name];
+      get h() {
+         return texture[1].h;
+      }
    };
 
    // Export
