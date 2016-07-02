@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Make the shader
       var shader = new VIOL.Shader(VIOL.res.vertSrc, VIOL.res.fragSrc, 2);
       shader.bindMaterial = function(mat) {
-         // The material should have one texture called "tex"
+         // The material should have one texture
          var tex = mat.textures[0];
 
          // Bind the attribs
@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function drawImage(img, x, y) {
-   // Clear
    gl.clear(gl.COLOR_BUFFER_BIT);
 
    var tex = new VIOL.Texture(img);
