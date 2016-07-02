@@ -44,8 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
          // Cleanup
          gl.bindBuffer(gl.ARRAY_BUFFER, null);
       };
-      shader.draw = function() {
-         // Draw
+      shader.drawSprite = function(sprite) {
+         this.bindMaterial(sprite.mat);
+
+         var mMatrix = sprite.transMatrix.transpose().data;
+         gl.uniformMatrix3fv(this.uniform("uModelMatrix"), false, mMatrix);
+
          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       };
       shader.enable();
@@ -71,21 +75,9 @@ function drawImage(img, x, y) {
    // Clear
    gl.clear(gl.COLOR_BUFFER_BIT);
 
-   // Make a texture
    var tex = new VIOL.Texture(img);
-
-   // Make a material
    var mat = new VIOL.Material(tex);
-
-   // Make a sprite
    var sprite = new VIOL.Sprite(mat, [x, y], [0.5, 0.5]);
 
-   // Bind the model array (this will be handled by the shader later)
-   gl.uniformMatrix3fv(VIOL.shader.uniform("uModelMatrix"), false, sprite.transMatrix.transpose().data);
-
-   // Tell shader to use the material (again, handled by shader in the future)
-   VIOL.shader.bindMaterial(mat);
-
-   // Draw
-   VIOL.shader.draw();
+   VIOL.shader.drawSprite(sprite);
 }

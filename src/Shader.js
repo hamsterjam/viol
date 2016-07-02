@@ -67,7 +67,7 @@ if (!VIOL) var VIOL = {};
       return gl.getUniformLocation(this.program, uniformName);
    };
 
-   Shader.prototype.draw = function() {
+   Shader.prototype.drawSprite = function() {
       // Force this to be overriden
       throw new Error("Called virtual function from instance of Shader");
    }
