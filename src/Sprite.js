@@ -6,16 +6,18 @@
 if (!VIOL) var VIOL = {};
 
 (function() {
-   function Sprite(mat, pos, anch, rot) {
+   function Sprite(mat, opt) {
       // Default parameters
-      if (pos  === undefined) pos  = [0, 0];
-      if (anch === undefined) anch =　[0, 0];
-      if (rot  === undefined) rot  = 0;
+      if (opt === undefined) opt = {};
+
+      if (opt.pos  === undefined) opt.pos  = [0, 0];
+      if (opt.anch === undefined) opt.anch =　[0, 0];
+      if (opt.rot  === undefined) opt.rot  = 0;
 
       this.mat  = mat;
-      this.pos  = pos;
-      this.anch = anch;
-      this.rot  = rot;
+      this.pos  = opt.pos;
+      this.anch = opt.anch;
+      this.rot  = opt.rot;
 
       this.matrix = VIOL.Mat3.identity();
       this.needsRebuild = true;

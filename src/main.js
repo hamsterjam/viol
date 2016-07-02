@@ -76,7 +76,10 @@ function drawImage(img, x, y) {
 
    var tex = new VIOL.Texture(img);
    var mat = new VIOL.Material(tex);
-   var sprite = new VIOL.Sprite(mat, [x, y], [0.5, 0.5]);
+   var sprite = new VIOL.Sprite(mat, {
+      pos: [x, y],
+      anch: [0.5, 0.5]
+   });
 
    VIOL.shader.drawSprite(sprite);
 }
