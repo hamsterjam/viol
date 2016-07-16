@@ -32,7 +32,8 @@ if (!VIOL) VIOL = {};
       this.tileW = tileSpec.size[0];
       this.tileH = tileSpec.size[1];
 
-      this.padding   = tileSpec.pad;
+      this.padX = tileSpec.pad[0];
+      this.padY = tileSpec.pad[1];
       this.tileCount = tileSpec.count;
 
       // Create the atlas texture (note that WebGL doesn't support array textures
@@ -89,6 +90,9 @@ if (!VIOL) VIOL = {};
       var texW = this.texW;
       var texH = this.texH;
 
+      var padX = this.padX;
+      var padY = this.padY;
+
       var vertBuffer  = this.vertBuffer;
       var coordBuffer = this.coordBuffer;
 
@@ -98,8 +102,8 @@ if (!VIOL) VIOL = {};
          },
 
          get coordBuffer() {
-            var x0 = x * tileW / texW;
-            var y0 = y * tileH / texH;
+            var x0 = (x * tileW + padX) / texW;
+            var y0 = (y * tileH + padY) / texH;
             var w = tileW / texW;
             var h = tileH / texH;
 
