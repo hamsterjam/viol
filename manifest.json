@@ -15,5 +15,9 @@
       "name": "testSprite",
       "src" : "res/test.png",
       "type": "image"
+   }, {
+      "name": "testAtlas",
+      "src" : "res/testAtlas.png",
+      "type": "image"
    }
 ]
