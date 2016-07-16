@@ -76,6 +76,38 @@ if (!VIOL) VIOL = {};
       this.coordBuffer = gl.createBuffer();
    }
 
+   TextureAtlas.protoytpe.getTexture = function(x, y) {
+      // This should return a pseudo-Texture object. That is, it should behave like
+      // a Texture, but it's functions should refer back here.
+
+      var tex = {};
+      tex.w = this.tileW;
+      tex.h = this.tileH;
+
+      tex.destroy = function() {};
+
+      tex.bindAttribs = function(vertAttrib, coordAttrib) {
+         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertBuffer);
+         gl.vertexAttribPointer(vertexAttrib, 2, gl.FLOAT, false, 0, 0);
+
+         var x0 = x * this.tileW / this.texW;
+         var y0 = y * this.tileH / this.texH;
+         var w = this.tileW / this.texW;
+         var h = this.tileH / this.texH;
+
+         var coords = [
+                x0,     y0,
+            x0 + w,     y0,
+                x0, y0 + h,
+            x0 + w, y0 + h
+         ];
+         gl.bindBuffer(gl.ARRAY_BUFFER, this.coordBuffer);
+         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(coords), gl.DYNAMIC_DRAW);
+         gl.vertexAttribPointer(coordAttrib, 2, gl.FLOAT, false, 0, 0);
+
+         gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      };
+   };
 })();
 
 //#ENDIF
