@@ -71,17 +71,6 @@ if (!VIOL) VIOL = {};
       gl.deleteBuffer(this.coordBuffer);
    };
 
-   Texture.prototype.bindAttribs = function(vertexAttrib, coordAttrib) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertBuffer);
-      gl.vertexAttribPointer(vertexAttrib, 2, gl.FLOAT, false, 0, 0);
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.coordBuffer);
-      gl.vertexAttribPointer(coordAttrib, 2, gl.FLOAT, false, 0, 0);
-
-      // Cleanup
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
-   };
-
    function isPOT(x) {
       return (x !== 0) && !(x & (x-1));
    }
