@@ -1,8 +1,6 @@
 //#IFNDEF __HAMSTERJAM_VIOL_TEXTURE_ATLAS
 //#DEFINE __HAMSTERJAM_VIOL_TEXTURE_ATLAS
 
-//#INCLUDE "src/Texture.js"
-
 if (!VIOL) VIOL = {};
 
 (function() {
@@ -35,7 +33,7 @@ if (!VIOL) VIOL = {};
       this.tileH = tileSpec.size[1];
 
       this.padding   = tileSpec.pad;
-      this.tileCount = tileSpec.count:
+      this.tileCount = tileSpec.count;
 
       // Create the atlas texture (note that WebGL doesn't support array textures
       // so we are doing things manually with a TEXTURE_2D)
@@ -76,38 +74,60 @@ if (!VIOL) VIOL = {};
       this.coordBuffer = gl.createBuffer();
    }
 
-   TextureAtlas.protoytpe.getTexture = function(x, y) {
+   TextureAtlas.prototype.destroy = function() {
+      gl.deleteTexture(this.tex);
+      gl.deleteBuffer(this.vertBuffer);
+      gl.deleteBuffer(this.coordBuffer);
+   };
+
+   TextureAtlas.prototype.getTexture = function(x, y) {
       // This should return a pseudo-Texture object. That is, it should behave like
       // a Texture, but it's functions should refer back here.
 
-      var tex = {};
-      tex.w = this.tileW;
-      tex.h = this.tileH;
+      var tileW = this.tileW;
+      var tileH = this.tileH;
+      var texW = this.texW;
+      var texH = this.texH;
 
-      tex.destroy = function() {};
+      var vertBuffer  = this.vertBuffer;
+      var coordBuffer = this.coordBuffer;
 
-      tex.bindAttribs = function(vertAttrib, coordAttrib) {
-         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertBuffer);
-         gl.vertexAttribPointer(vertexAttrib, 2, gl.FLOAT, false, 0, 0);
+      var pTex = {
+         get vertBuffer() {
+            return vertBuffer;
+         },
 
-         var x0 = x * this.tileW / this.texW;
-         var y0 = y * this.tileH / this.texH;
-         var w = this.tileW / this.texW;
-         var h = this.tileH / this.texH;
+         get coordBuffer() {
+            var x0 = x * tileW / texW;
+            var y0 = y * tileH / texH;
+            var w = tileW / texW;
+            var h = tileH / texH;
 
-         var coords = [
-                x0,     y0,
-            x0 + w,     y0,
-                x0, y0 + h,
-            x0 + w, y0 + h
-         ];
-         gl.bindBuffer(gl.ARRAY_BUFFER, this.coordBuffer);
-         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(coords), gl.DYNAMIC_DRAW);
-         gl.vertexAttribPointer(coordAttrib, 2, gl.FLOAT, false, 0, 0);
+            var coords = [
+                   x0,     y0,
+               x0 + w,     y0,
+                   x0, y0 + h,
+               x0 + w, y0 + h
+            ];
+            gl.bindBuffer(gl.ARRAY_BUFFER, coordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(coords), gl.DYNAMIC_DRAW);
 
-         gl.bindBuffer(gl.ARRAY_BUFFER, null);
+            gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+            return coordBuffer;
+         }
       };
+      pTex.w = this.tileW;
+      pTex.h = this.tileH;
+      pTex.tex = this.tex;
+
+      pTex.destroy = function() {};
+
+      return pTex;
    };
+
+   // Export
+   VIOL.TextureAtlas = TextureAtlas;
 })();
 
 //#ENDIF

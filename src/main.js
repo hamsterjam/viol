@@ -2,6 +2,7 @@
 //#INCLUDE "src/Mat3.js"
 //#INCLUDE "src/Shader.js"
 //#INCLUDE "src/Texture.js"
+//#INCLUDE "src/TextureAtlas.js"
 //#INCLUDE "src/Material.js"
 //#INCLUDE "src/Sprite.js"
 
@@ -78,6 +79,20 @@ function drawImage(img, x, y) {
    var mat = new VIOL.Material(tex);
    var sprite = new VIOL.Sprite(mat, {
       pos: [x, y],
+      anch: [0.5, 0.5]
+   });
+
+   VIOL.shader.drawSprite(sprite);
+}
+
+function atlasTest(img, tileSpec, tx, ty, x, y) {
+   gl.clear(gl.COLOR_BUFFER_BIT);
+
+   var atlas = new VIOL.TextureAtlas(img, tileSpec);
+   var tex = atlas.getTexture(tx, ty);
+   var mat = new VIOL.Material(tex);
+   var sprite = new VIOL.Sprite(mat, {
+      pos:  [x, y],
       anch: [0.5, 0.5]
    });
 
