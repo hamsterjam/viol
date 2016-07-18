@@ -21,8 +21,11 @@ if (!VIOL) VIOL = {};
 
       if (tileSpec.size === undefined) {
          // Just fit tiles in as big as will fit
-         let sizeX = Math.floor(img.width  / tileSpec.count[0]);
-         let sizeY = Math.floor(img.height / tileSpec.count[1]);
+         let sizeX = (img.width  - tileSpec.pad[0] * (tileSpec.count[0]-1)) / tileSpec.count[0];
+         let sizeY = (img.height - tileSpec.pad[1] * (tileSpec.count[1]-1)) / tileSpec.count[1];
+
+         sizeX = Math.floor(sizeX);
+         sizeY = Math.floor(sizeY);
 
          tileSpec.size = [sizeX, sizeY];
       }
@@ -108,8 +111,8 @@ if (!VIOL) VIOL = {};
          },
 
          get coordBuffer() {
-            var x0 = (x * tileW + padX) / texW;
-            var y0 = (y * tileH + padY) / texH;
+            var x0 = x * (tileW + padX) / texW;
+            var y0 = y * (tileH + padY) / texH;
             var w = tileW / texW;
             var h = tileH / texH;
 
