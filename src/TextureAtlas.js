@@ -12,18 +12,22 @@ if (!VIOL) VIOL = {};
       //    pad:     This is the gap between tiles
       //    count:   This is how many tiles exist (in x and y)
 
-      if (!(tileSpec.size  instanceof Array)) tileSpec.size  = [tileSpec.size,  tileSpec.size];
-      if (!(tileSpec.pad   instanceof Array)) tileSpec.pad   = [tileSpec.pad,   tileSpec.pad];
-      if (!(tileSpec.count instanceof Array)) tileSpec.count = [tileSpec.count, tileSpec.count];
 
       if (tileSpec.count === undefined) tileSpec.count = [1, 1];
       if (tileSpec.pad   === undefined) tileSpec.pad   = [0, 0];
+
+      if (!(tileSpec.count instanceof Array)) tileSpec.count = [tileSpec.count, tileSpec.count];
+      if (!(tileSpec.pad   instanceof Array)) tileSpec.pad   = [tileSpec.pad,   tileSpec.pad];
 
       if (tileSpec.size === undefined) {
          // Just fit tiles in as big as will fit
          let sizeX = Math.floor(img.width  / tileSpec.count[0]);
          let sizeY = Math.floor(img.height / tileSpec.count[1]);
+
+         tileSpec.size = [sizeX, sizeY];
       }
+
+      if (!(tileSpec.size  instanceof Array)) tileSpec.size  = [tileSpec.size,  tileSpec.size];
 
       // This is for the most part the same as the constructor for a Texture.
       this.texW = img.width;
