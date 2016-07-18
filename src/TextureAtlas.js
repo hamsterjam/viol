@@ -85,6 +85,8 @@ if (!VIOL) VIOL = {};
       // This should return a pseudo-Texture object. That is, it should behave like
       // a Texture, but it's functions should refer back here.
 
+      // Not sure if all these vars are nececary, I'm kind of worried about this
+      // pointing to the wrong thing though...
       var tileW = this.tileW;
       var tileH = this.tileH;
       var texW = this.texW;
